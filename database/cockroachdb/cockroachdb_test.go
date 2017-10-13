@@ -10,8 +10,8 @@ import (
 	"testing"
 
 	"github.com/lib/pq"
-	dt "github.com/mattes/migrate/database/testing"
-	mt "github.com/mattes/migrate/testing"
+	dt "github.com/eatigo/migrate/database/testing"
+	mt "github.com/eatigo/migrate/testing"
 	"bytes"
 )
 

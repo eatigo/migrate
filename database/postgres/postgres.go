@@ -8,8 +8,8 @@ import (
 	nurl "net/url"
 
 	"github.com/lib/pq"
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database"
+	"github.com/eatigo/migrate"
+	"github.com/eatigo/migrate/database"
 )
 
 func init() {

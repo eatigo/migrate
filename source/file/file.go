@@ -9,7 +9,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/mattes/migrate/source"
+	"github.com/eatigo/migrate/source"
 )
 
 func init() {

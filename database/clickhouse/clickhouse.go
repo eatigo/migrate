@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database"
+	"github.com/eatigo/migrate"
+	"github.com/eatigo/migrate/database"
 )
 
 var DefaultMigrationsTable = "schema_migrations"

@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/fsouza/fake-gcs-server/fakestorage"
-	"github.com/mattes/migrate/source"
-	st "github.com/mattes/migrate/source/testing"
+	"github.com/eatigo/migrate/source"
+	st "github.com/eatigo/migrate/source/testing"
 )
 
 func Test(t *testing.T) {

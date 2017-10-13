@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/mattes/migrate"
-	_ "github.com/mattes/migrate/database/stub" // TODO remove again
-	_ "github.com/mattes/migrate/source/file"
+	"github.com/eatigo/migrate"
+	_ "github.com/eatigo/migrate/database/stub" // TODO remove again
+	_ "github.com/eatigo/migrate/source/file"
 	"os"
 	"fmt"
 )

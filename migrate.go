@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mattes/migrate/database"
-	"github.com/mattes/migrate/source"
+	"github.com/eatigo/migrate/database"
+	"github.com/eatigo/migrate/source"
 )
 
 // DefaultPrefetchMigrations sets the number of migrations to pre-read

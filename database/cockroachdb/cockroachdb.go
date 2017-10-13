@@ -9,8 +9,8 @@ import (
 
 	"github.com/cockroachdb/cockroach-go/crdb"
 	"github.com/lib/pq"
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database"
+	"github.com/eatigo/migrate"
+	"github.com/eatigo/migrate/database"
 	"regexp"
 	"strconv"
 	"context"

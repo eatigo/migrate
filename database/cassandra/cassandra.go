@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
-	"github.com/mattes/migrate/database"
+	"github.com/eatigo/migrate/database"
 )
 
 func init() {
