@@ -82,24 +82,27 @@ type Migrate struct {
 func New(sourceUrl, databaseUrl string) (*Migrate, error) {
 	m := newCommon()
 
-	sourceName, err := schemeFromUrl(sourceUrl)
-	if err != nil {
-		return nil, err
+	if sourceUrl != "" {
+		sourceName, err := schemeFromUrl(sourceUrl)
+		if err != nil {
+			return nil, err
+		}
+		m.sourceName = sourceName
 	}
-	m.sourceName = sourceName
-
 	databaseName, err := schemeFromUrl(databaseUrl)
 	if err != nil {
 		return nil, err
 	}
 	m.databaseName = databaseName
 
-	sourceDrv, err := source.Open(sourceUrl)
-	if err != nil {
-		return nil, err
+	if sourceUrl != "" {
+		sourceDrv, err := source.Open(sourceUrl)
+		if err != nil {
+			return nil, err
+		}
+		m.sourceDrv = sourceDrv
 	}
-	m.sourceDrv = sourceDrv
-
+	
 	databaseDrv, err := database.Open(databaseUrl)
 	if err != nil {
 		return nil, err
