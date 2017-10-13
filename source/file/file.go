@@ -9,6 +9,8 @@ import (
 	"path"
 	"path/filepath"
 
+	"strings"
+
 	"github.com/eatigo/migrate/source"
 )
 
@@ -18,47 +20,73 @@ func init() {
 
 type File struct {
 	url        string
+	pathMap    map[string]string
 	path       string
 	migrations *source.Migrations
 }
 
+type fileInfoExt struct {
+	os.FileInfo
+	path string
+}
+
+func (f *File) listFiles(dirs string) ([]fileInfoExt, error) {
+	urls := strings.Split(dirs, ",")
+
+	var files []fileInfoExt
+	for _, url := range urls {
+		u, err := nurl.Parse(url)
+		if err != nil {
+			return nil, err
+		}
+
+		// concat host and path to restore full path
+		// host might be `.`
+		p := u.Host + u.Path
+
+		if len(p) == 0 {
+			// default to current directory if no path
+			wd, err := os.Getwd()
+			if err != nil {
+				return nil, err
+			}
+			p = wd
+
+		} else if p[0:1] == "." || p[0:1] != "/" {
+			// make path absolute if relative
+			abs, err := filepath.Abs(p)
+			if err != nil {
+				return nil, err
+			}
+			p = abs
+		}
+
+		// scan directory
+		localFiles, err := ioutil.ReadDir(p)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, fi := range localFiles {
+			files = append(files, fileInfoExt{FileInfo: fi, path: url})
+		}
+	}
+
+	return files, nil
+}
+
 func (f *File) Open(url string) (source.Driver, error) {
-	u, err := nurl.Parse(url)
-	if err != nil {
-		return nil, err
-	}
 
-	// concat host and path to restore full path
-	// host might be `.`
-	p := u.Host + u.Path
-
-	if len(p) == 0 {
-		// default to current directory if no path
-		wd, err := os.Getwd()
-		if err != nil {
-			return nil, err
-		}
-		p = wd
-
-	} else if p[0:1] == "." || p[0:1] != "/" {
-		// make path absolute if relative
-		abs, err := filepath.Abs(p)
-		if err != nil {
-			return nil, err
-		}
-		p = abs
-	}
-
-	// scan directory
-	files, err := ioutil.ReadDir(p)
+	files, err := f.listFiles(url)
 	if err != nil {
 		return nil, err
 	}
 
 	nf := &File{
 		url:        url,
-		path:       p,
 		migrations: source.NewMigrations(),
+		path:       url,
+		pathMap:    map[string]string{},
 	}
 
 	for _, fi := range files {
@@ -70,8 +98,10 @@ func (f *File) Open(url string) (source.Driver, error) {
 			if !nf.migrations.Append(m) {
 				return nil, fmt.Errorf("unable to parse file %v", fi.Name())
 			}
+			nf.pathMap[fi.Name()] = fi.path
 		}
 	}
+
 	return nf, nil
 }
 
@@ -106,7 +136,7 @@ func (f *File) Next(version uint) (nextVersion uint, err error) {
 
 func (f *File) ReadUp(version uint) (r io.ReadCloser, identifier string, err error) {
 	if m, ok := f.migrations.Up(version); ok {
-		r, err := os.Open(path.Join(f.path, m.Raw))
+		r, err := os.Open(path.Join(f.pathMap[m.Raw], m.Raw))
 		if err != nil {
 			return nil, "", err
 		}
@@ -117,7 +147,7 @@ func (f *File) ReadUp(version uint) (r io.ReadCloser, identifier string, err err
 
 func (f *File) ReadDown(version uint) (r io.ReadCloser, identifier string, err error) {
 	if m, ok := f.migrations.Down(version); ok {
-		r, err := os.Open(path.Join(f.path, m.Raw))
+		r, err := os.Open(path.Join(f.pathMap[m.Raw], m.Raw))
 		if err != nil {
 			return nil, "", err
 		}

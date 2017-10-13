@@ -3,3 +3,4 @@ cli/build
 .coverage
 .godoc.pid
 .idea/
+cli/migrate/main_go

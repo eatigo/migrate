@@ -72,7 +72,8 @@ Commands:
 
 	// translate -path into -source if given
 	if *sourcePtr == "" && *pathPtr != "" {
-		*sourcePtr = fmt.Sprintf("file://%v", *pathPtr)
+		dirs := strings.Split(*pathPtr, ",")
+		*sourcePtr = fmt.Sprintf("file://%v", strings.Join(dirs, ",file://"))
 	}
 
 	// initialize migrate
