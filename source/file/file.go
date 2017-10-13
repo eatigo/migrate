@@ -68,7 +68,7 @@ func (f *File) listFiles(dirs string) ([]fileInfoExt, error) {
 		}
 
 		for _, fi := range localFiles {
-			files = append(files, fileInfoExt{FileInfo: fi, path: url})
+			files = append(files, fileInfoExt{FileInfo: fi, path: p})
 		}
 	}
 
