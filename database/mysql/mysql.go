@@ -280,7 +280,7 @@ func (m *Mysql) Drop() error {
 	if len(tableNames) > 0 {
 		// delete one by one ...
 		for _, t := range tableNames {
-			query = "DROP TABLE IF EXISTS `" + t + "` CASCADE"
+			query = "SET FOREIGN_KEY_CHECKS=0; DROP TABLE IF EXISTS `" + t + "` CASCADE; SET FOREIGN_KEY_CHECKS=1;"
 			if _, err := m.db.Exec(query); err != nil {
 				return &database.Error{OrigErr: err, Query: []byte(query)}
 			}

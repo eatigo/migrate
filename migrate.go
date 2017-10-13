@@ -102,7 +102,7 @@ func New(sourceUrl, databaseUrl string) (*Migrate, error) {
 		}
 		m.sourceDrv = sourceDrv
 	}
-		
+
 	databaseDrv, err := database.Open(databaseUrl)
 	if err != nil {
 		return nil, err
@@ -201,7 +201,11 @@ func (m *Migrate) Close() (source error, database error) {
 	}()
 
 	go func() {
-		sourceSrvClose <- m.sourceDrv.Close()
+		if m.sourceDrv != nil {
+			sourceSrvClose <- m.sourceDrv.Close()
+		} else {
+			sourceSrvClose <- nil
+		}
 	}()
 
 	return <-sourceSrvClose, <-databaseSrvClose
