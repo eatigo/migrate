@@ -102,7 +102,7 @@ func New(sourceUrl, databaseUrl string) (*Migrate, error) {
 		}
 		m.sourceDrv = sourceDrv
 	}
-	
+		
 	databaseDrv, err := database.Open(databaseUrl)
 	if err != nil {
 		return nil, err
